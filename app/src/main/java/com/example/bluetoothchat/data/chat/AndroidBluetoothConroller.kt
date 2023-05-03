@@ -56,6 +56,7 @@ class AndroidBluetoothController(
             IntentFilter(BluetoothDevice.ACTION_FOUND)
         )
         updatePairedDevices()
+        Log.d("tag", "startDiscovery")
         bluetoothAdapter?.startDiscovery()
     }
     override fun stopDiscovery() {
@@ -63,6 +64,7 @@ class AndroidBluetoothController(
             Log.d("tag", "no scan stop permission")
             return
         }
+        Log.d("tag", "cancelDiscovery")
         bluetoothAdapter?.cancelDiscovery()
     }
     override fun release() {

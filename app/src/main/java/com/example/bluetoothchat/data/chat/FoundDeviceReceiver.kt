@@ -23,6 +23,4 @@ class FoundDeviceReceiver(private val onDeviceFound: (BluetoothDevice) -> Unit) 
             }
         }
     }
-
-
 }
