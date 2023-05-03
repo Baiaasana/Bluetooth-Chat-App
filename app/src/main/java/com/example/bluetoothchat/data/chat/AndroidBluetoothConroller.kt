@@ -7,6 +7,7 @@ import android.bluetooth.BluetoothManager
 import android.content.Context
 import android.content.IntentFilter
 import android.content.pm.PackageManager
+import android.util.Log
 import com.example.bluetoothchat.domain.chat.BluetoothController
 import com.example.bluetoothchat.domain.chat.BluetoothDeviceDomain
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -16,9 +17,8 @@ import kotlinx.coroutines.flow.update
 
 @SuppressLint("MissingPermission")
 class AndroidBluetoothController(
-    private val context: Context,
-
-    ) : BluetoothController {
+    private val context: Context
+) : BluetoothController {
 
     private val bluetoothManager by lazy {
         context.getSystemService(BluetoothManager::class.java)
@@ -48,33 +48,29 @@ class AndroidBluetoothController(
 
     override fun startDiscovery() {
         if (!hasPermission(Manifest.permission.BLUETOOTH_SCAN)) {
+            Log.d("tag", "no scan start permission")
             return
         }
-
         context.registerReceiver(
             foundDeviceReceiver,
             IntentFilter(BluetoothDevice.ACTION_FOUND)
         )
         updatePairedDevices()
-
         bluetoothAdapter?.startDiscovery()
     }
-
     override fun stopDiscovery() {
-        if(!hasPermission(Manifest.permission.BLUETOOTH_SCAN)){
+        if (!hasPermission(Manifest.permission.BLUETOOTH_SCAN)) {
+            Log.d("tag", "no scan stop permission")
             return
         }
         bluetoothAdapter?.cancelDiscovery()
     }
-
     override fun release() {
         context.unregisterReceiver(foundDeviceReceiver)
     }
-
     private fun updatePairedDevices() {
         if (!hasPermission(Manifest.permission.BLUETOOTH_CONNECT)) {
             return
-
         }
         bluetoothAdapter
             ?.bondedDevices
